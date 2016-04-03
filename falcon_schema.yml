@@ -1,0 +1,11 @@
+infos:
+  app_name: 'desenho'
+
+models:
+  user:
+    name: string
+    email: string
+    age: integer
+  post:
+    title: string
+    content: text
