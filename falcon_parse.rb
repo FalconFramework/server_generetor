@@ -1,38 +1,17 @@
 require 'yaml'
-
-
-
-class FalconScriptManager
-  def initialize(file_name)
-    @file = File.new(file_name, "w")
-  end
-
-  def write_to_file(line)
-    @file.puts(line)
-  end
-
-  def close_file
-    @file.close
-  end
-
-end
-
+require_relative 'falcon_script_manager.rb'
 
 class FalconParse
-
-
 
   def initialize(file)
     fileContent = YAML.load_file(file)
     @infos = fileContent['infos']
     @models = fileContent['models']
-
     @scriptManager = FalconScriptManager.new('falcon.sh')
   end
 
   def create_api
     api_name = @infos['app_name']
-
     rails_version = "5.0.0.beta3"
     check_environment_string ='source ~/.rvm/scripts/rvm' +
     "\n" +
@@ -79,11 +58,3 @@ then
     @scriptManager.write_to_file('rake db:migrate')
   end
 end
-
-
-
-
-falcon = FalconParse.new('falcon_schema.yml')
-falcon.create_api
-falcon.create_models
-falcon.migrate_db
