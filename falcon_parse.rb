@@ -28,7 +28,8 @@ then
   echo "Installing ruby 2.3.0..."
   rvm install ruby-2.3.0
 fi' +
-"\nrvm use ruby-2.3.0 \nrvm use ruby-2.3.0@#{api_name} --ruby-version --create \n" +
+"\nrvm use ruby-2.3.0 \nrvm use ruby-2.3.0@#{api_name} --ruby-version --create \nrvm gemset use #{api_name}
+\n" +
 'if [[ "$(rails -v)" != *"5.0"* ]]
 then
   echo "Needs Rails 5.0"
