@@ -7,5 +7,5 @@ models:
     email: string
     age: integer
   post:
-    title: string
-    content: text
+    name: string
+    price: float

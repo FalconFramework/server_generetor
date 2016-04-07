@@ -19,8 +19,10 @@ class FalconParse
 then
   echo "Needs rvm 1.27"
   echo "Installing rvm 1.27..."
-  \curl -sSL https://get.rvm.io | bash -s stable --rails
-fi' +
+  \curl -sSL https://get.rvm.io | bash -s stable --rails ' + "\n "
+  + 'echo [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" >> ~/.bash_profile '
+  + "\n" +
+'fi' +
 "\n" +
 'if [[ "$(rvm use ruby-2.3.0)" == *"is not installed"* ]]
 then
