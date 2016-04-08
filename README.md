@@ -8,7 +8,7 @@ This is the Falcon server generator. To use you've to have ruby installed in you
 * 4. run `bash falcon.sh`. This will generate a application based on your schema.
 * 5. run cd ..
 * 6. run cd falcon_generated_app
-* 7. run cd desenho
+* 7. run cd your_app_name
 * 8. run rails s
 * 9. Enjoy your api
 
