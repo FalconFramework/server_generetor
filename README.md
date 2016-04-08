@@ -2,9 +2,9 @@
 
 This is the Falcon server generator. To use you've to have ruby installed in your machine.
 ```
-* 1. Git clone this repo
+* 1. git clone git@gitlab.com:FalconTeam/server_generetor.git
 * 2. Define your falco_schema.yml. (infos, models, ...)
-* 3. run `ruby falcon.rb`. This will generate a falcon.sh script witch will create you server
-* 4. run `sh falcon.sh`
+* 3. run `ruby falcon_main.rb`. This will generate a falcon.sh script witch will create you server
+* 4. run `bash falcon.sh`. This will generate a application based on your schema.
 
 ```
