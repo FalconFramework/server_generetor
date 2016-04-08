@@ -13,6 +13,11 @@ class FalconParse
   def create_api
     api_name = @infos['app_name']
     rails_version = "5.0.0.beta3"
+
+    @scriptManager.write_to_file("cd ..")
+    @scriptManager.write_to_file("mkdir falcon_generated_app")
+    @scriptManager.write_to_file("cd falcon_generated_app")
+
     check_environment_string ='source ~/.rvm/scripts/rvm
 if [[ "$(rvm -v)" != *"1.27"* ]]
 then
@@ -38,12 +43,11 @@ then
   rvm gemset use ' + "#{api_name}" + '
   gem install rails -v ' + rails_version + '
 fi
-
 '
     @scriptManager.write_to_file(check_environment_string)
     @scriptManager.write_to_file('echo "Creating API..."')
-    @scriptManager.write_to_file("rails _#{rails_version}_ new ../#{api_name} --api")
-    @scriptManager.write_to_file("cd ../#{api_name}/")
+    @scriptManager.write_to_file("rails _#{rails_version}_ new #{api_name} --api")
+    @scriptManager.write_to_file("cd #{api_name}/")
   end
 
   def create_models
