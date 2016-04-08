@@ -46,8 +46,17 @@ fi
 '
     @scriptManager.write_to_file(check_environment_string)
     @scriptManager.write_to_file('echo "Creating API..."')
-    @scriptManager.write_to_file("rails _#{rails_version}_ new #{api_name} --api")
+    @scriptManager.write_to_file("rails _#{rails_version}_ new #{api_name} --api ")
     @scriptManager.write_to_file("cd #{api_name}/")
+
+    @scriptManager.write_to_file('echo "Config JSONAPI"')
+    serializer_gem = "'active_model_serializers'"
+    serializer_gem_version = "'~> 0.10.0.rc1'"
+    gem_to_add = "gem #{serializer_gem}, #{serializer_gem_version}"
+    command_to_add_gem = 'echo "' + gem_to_add + '"' + ">> Gemfile"
+    @scriptManager.write_to_file(command_to_add_gem)
+    @scriptManager.write_to_file("echo ActiveModel::Serializer.config.adapter = :json >> config/initializers/ams_json_adapter.rb")
+    @scriptManager.write_to_file("bundle install")
   end
 
   def create_models
