@@ -6,6 +6,13 @@ models:
     name: string
     email: string
     age: integer
+    post: has_many
+    aluno: has_one
+
   post:
     name: string
     price: float
+    user: belongs_to
+  aluno:
+    matricula: string
+    user: references

@@ -1,13 +1,16 @@
 require 'yaml'
 require_relative 'falcon_script_manager.rb'
+require 'active_support/inflector'
 
 class FalconParse
+
 
   def initialize(file)
     fileContent = YAML.load_file(file)
     @infos = fileContent['infos']
     @models = fileContent['models']
     @scriptManager = FalconScriptManager.new('falcon.sh')
+    @relations_types = ["has_many", "belongs_to", "has_one"]
   end
 
   def create_api
@@ -66,10 +69,43 @@ fi
     @models.each do |model, properties|
       current_model_command = "rails g scaffold #{model} "
       properties.each do |property_name, type|
-        current_model_command += "#{property_name}:#{type} "
+        if  @relations_types.include?(type)
+          if type == "belongs_to"
+            current_model_command += "#{property_name}:references "
+          end
+        else
+          current_model_command += "#{property_name}:#{type} "
+        end
       end
       @scriptManager.write_to_file(current_model_command)
     end
+  end
+
+  def create_relationships
+    @models.each do |model, properties|
+      properties.each do |property_name, type|
+        if  @relations_types.include?(type)
+          if type == "has_many"
+            pluralized_property_name = property_name.pluralize
+            add_relation_line_content = "#{type} :#{pluralized_property_name}"
+            add_relation_line_in_model(model,add_relation_line_content)
+          elsif type != "belongs_to"
+            add_relation_line_content = "#{type} :#{property_name}"
+            add_relation_line_in_model(model,add_relation_line_content)
+          end
+        end
+      end
+    end
+  end
+
+  def add_relation_line_in_model(model,line_content)
+    model_file_name = "app/models/#{model}.rb"
+    add_relation_command = "awk 'NR==2{print \"#{line_content}\"}1' #{model_file_name} > newfile"
+    @scriptManager.write_to_file(add_relation_command)
+    add_relation_command = "rm #{model_file_name}"
+    @scriptManager.write_to_file(add_relation_command)
+    add_relation_command = "mv newfile #{model_file_name}"
+    @scriptManager.write_to_file(add_relation_command)
   end
 
   def migrate_db
