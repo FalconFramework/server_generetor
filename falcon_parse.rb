@@ -108,6 +108,29 @@ fi
     @scriptManager.write_to_file(add_relation_command)
   end
 
+  def create_query_support
+    @models.each do |model, properties|
+      add_query_support(model)
+    end
+  end
+
+  def add_query_support(model_name)
+    model_capitalized = model_name.slice(0,1).capitalize + model_name.slice(1..-1)
+    query_support_line_content =     "@#{model_name.pluralize} = #{model_capitalized}.where(params[:query])"
+    controller_file_name = "app/controllers/#{model_name.pluralize}_controller.rb"
+    add_query_command = "awk 'NR==7{print \"#{query_support_line_content}\"}1' #{controller_file_name} > newfile"
+    @scriptManager.write_to_file(add_query_command)
+    add_query_command = "rm #{controller_file_name}"
+    @scriptManager.write_to_file(add_query_command)
+    add_query_command = "mv newfile #{controller_file_name}"
+    @scriptManager.write_to_file(add_query_command)
+    add_query_command = "sed -i.bak -e  '6d' #{controller_file_name}"
+    @scriptManager.write_to_file(add_query_command)
+    add_query_command = "rm #{controller_file_name}.bak"
+    @scriptManager.write_to_file(add_query_command)
+
+  end
+
   def migrate_db
     @scriptManager.write_to_file('rake db:migrate')
   end

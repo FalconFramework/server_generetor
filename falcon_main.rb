@@ -5,3 +5,4 @@ falcon.create_api
 falcon.create_models
 falcon.create_relationships
 falcon.migrate_db
+falcon.create_query_support
