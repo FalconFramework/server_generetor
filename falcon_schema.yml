@@ -1,18 +1,13 @@
 infos:
-  app_name: 'desenho'
+  app_name: 'ido'
 
 models:
-  user:
+  aluno:
     name: string
     email: string
-    age: integer
-    post: has_many
-    aluno: has_one
+    curso: has_many
 
-  post:
+  curso:
     name: string
     price: float
-    user: belongs_to
-  aluno:
-    matricula: string
-    user: references
+    aluno: belongs_to
