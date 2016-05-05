@@ -10,7 +10,7 @@ class FalconParse
     @infos = fileContent['infos']
     @models = fileContent['models']
     @scriptManager = FalconScriptManager.new('falcon.sh')
-    @relations_types = ["has_many", "belongs_to", "has_one"]
+    @relations_types =  /"|has_many|belongs_to|has_one|"/
   end
 
   def create_api
@@ -69,9 +69,11 @@ fi
     @models.each do |model, properties|
       current_model_command = "rails g scaffold #{model} "
       properties.each do |property_name, type|
-        if  @relations_types.include?(type)
+        if  @relations_types === type
           if type == "belongs_to"
             current_model_command += "#{property_name}:references "
+          elsif type.include?("belongs_to =>")
+            current_model_command += "#{property_name}_id:integer "
           end
         else
           current_model_command += "#{property_name}:#{type} "
@@ -84,10 +86,15 @@ fi
   def create_relationships
     @models.each do |model, properties|
       properties.each do |property_name, type|
-        if  @relations_types.include?(type)
+        if  @relations_types === type
           if type == "has_many"
             pluralized_property_name = property_name.pluralize
             add_relation_line_content = "#{type} :#{pluralized_property_name}"
+            add_relation_line_in_model(model,add_relation_line_content)
+          elsif type.include?("belongs_to =>")
+            class_name_string = (type.split(' => ')[1]).capitalize
+            relation_name = type.split('=>')[0]
+            add_relation_line_content = "#{relation_name} :friend, :class_name => \\\"#{class_name_string}\\\" "
             add_relation_line_in_model(model,add_relation_line_content)
           elsif type != "belongs_to"
             add_relation_line_content = "#{type} :#{property_name}"

@@ -2,12 +2,16 @@ infos:
   app_name: 'ido'
 
 models:
-  aluno:
+  user:
     name: string
     email: string
-    curso: has_many
-
-  curso:
-    name: string
-    price: float
-    aluno: belongs_to
+    phone_number: string
+    wedding_date: date
+    phone_number: string
+    friend: has_many
+  friend:
+    user: belongs_to
+    friend: belongs_to => user
+  preference:
+    user: belongs_to
+    bidget: float
