@@ -12,65 +12,45 @@ opt_parser = OptionParser.new do |opt|
   opt.separator  ""
   opt.separator "--------------------------------------------"
   opt.separator  "Commands"
-  opt.separator  ""
-
-  opt.separator  "           generate: Generate the application through a model"
-  opt.separator  ""
-
-  opt.separator  ""
+  opt.separator  "    generate: Generate the application through a model"
+  opt.separator "--------------------------------------------"
   opt.separator "--------------------------------------------"
   opt.separator  "Options"
-
+  opt.on("-m","--model MODEL","Tell the folder path of your .yml database model") do
+    |model|
+      options[:model] = model
+    end
   opt.on("-t","--target TARGET","Tell the folder path to store your generated application") do
   |target|
     options[:target] = target
   end
 
-  opt.on("-m","--model MODEL","Tell the folder path of your .yml database model") do
-  |model|
-    options[:model] = model
-  end
-
   opt.on("-h","--help","help") do
+    puts opt_parser
   end
 
 end
 
 opt_parser.parse!
-
-
 target = options[:target] || nil
 model = options[:model] || nil
 
-
 case ARGV[0]
 when "generate"
-
-  if model == nil
+  if model != ""
     puts "--------------------------------------------"
-    puts ""
-    puts ""
-    puts "Attention: Model path not specified, please put -m option and pass the folder like 'falcon_factory generate -m /usr/mymodel.yml'"
-    puts ""
-    puts ""
+    puts "Attention: Model path not specified"
     puts "--------------------------------------------"
     puts opt_parser
-  elsif target == nil
-  puts "--------------------------------------------"
-  puts ""
-  puts ""
-    puts "Target not specified, please put -m option and pass the folder like 'falcon_factory generate -m /usr/mymodel.yml -t /myappfolder'"
-    puts ""
-    puts ""
+  elsif target != ""
     puts "--------------------------------------------"
-    puts ""
+    puts "Attention: Target not specified"
+    puts "--------------------------------------------"
     puts opt_parser
   else
+  puts "model #{model}"
     puts "target #{target}"
-    puts "model #{model}"
     falcon = FalconFactory::FalconMain.new
     falcon.its_ok
   end
-else
-  puts opt_parser
 end
