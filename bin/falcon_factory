@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require 'falcon_factory'
+
+falcon = FalconFactory::FalconMain.new
+falcon.its_ok
