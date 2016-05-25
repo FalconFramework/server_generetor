@@ -68,8 +68,10 @@ when "generate"
   else
     puts "target #{target}"
     puts "model #{model}"
+
     falcon = FalconFactory::FalconMain.new
-    falcon.its_ok
+    str = falcon.process target
+    puts str
   end
 else
   puts opt_parser
