@@ -70,8 +70,8 @@ when "generate"
     puts "model #{model}"
 
     falcon = FalconFactory::FalconMain.new
-    str = falcon.process target
-    puts str
+    falcon.create_app_factory_script(model,target)
+    
   end
 else
   puts opt_parser

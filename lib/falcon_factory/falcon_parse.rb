@@ -4,24 +4,19 @@ require 'active_support/inflector'
 
 class FalconParse
 
-  def testedelparse(model_path, target_path)
-    falcon_main = FalconScriptManager.new
-    proccess = falcon_main.testedelscript(model_path, target_path)
-    proccess
+  def initialize(model_path,target_path)
+    fileContent = YAML.load_file(model_path)
+    @infos = fileContent['infos']
+    @models = fileContent['models']
+    @scriptManager = FalconScriptManager.new('falcon.sh')
+    @relations_types =  /"|has_many|belongs_to|has_one|"/
   end
-  # def initialize(file)
-  #   fileContent = YAML.load_file(file)
-  #   @infos = fileContent['infos']
-  #   @models = fileContent['models']
-  #   @scriptManager = FalconScriptManager.new('falcon.sh')
-  #   @relations_types =  /"|has_many|belongs_to|has_one|"/
-  # end
 
   def create_api
     api_name = @infos['app_name']
     rails_version = "5.0.0.beta3"
 
-    @scriptManager.write_to_file("cd ..")
+    @scriptManager.write_to_file("cd #{target_path}")
     @scriptManager.write_to_file("mkdir falcon_generated_app")
     @scriptManager.write_to_file("cd falcon_generated_app")
 
@@ -94,15 +89,15 @@ fi
           if type == "has_many"
             pluralized_property_name = property_name.pluralize
             add_relation_line_content = "#{type} :#{pluralized_property_name}"
-            add_relation_line_in_model(model,add_relation_line_content)
+            @scriptManager.write_script_to_add_relation_line_in_model(model,add_relation_line_content)
           elsif type.include?("belongs_to =>")
             class_name_string = (type.split(' => ')[1]).capitalize
             relation_name = type.split('=>')[0]
             add_relation_line_content = "#{relation_name} :friend, :class_name => \\\"#{class_name_string}\\\" "
-            add_relation_line_in_model(model,add_relation_line_content)
+            @scriptManager.write_script_to_add_relation_line_in_model(model,add_relation_line_content)
           elsif type != "belongs_to"
             add_relation_line_content = "#{type} :#{property_name}"
-            add_relation_line_in_model(model,add_relation_line_content)
+            @scriptManager.write_script_to_add_relation_line_in_model(model,add_relation_line_content)
           end
         end
       end
@@ -111,34 +106,8 @@ fi
 
   def create_query_support
     @models.each do |model, properties|
-      add_query_support(model)
+      @scriptManager.write_script_to_add_query_support(model)
     end
-  end
-
-  def add_relation_line_in_model(model,line_content)
-    model_file_name = "app/models/#{model}.rb"
-    add_relation_command = "awk 'NR==2{print \"#{line_content}\"}1' #{model_file_name} > newfile"
-    @scriptManager.write_to_file(add_relation_command)
-    add_relation_command = "rm #{model_file_name}"
-    @scriptManager.write_to_file(add_relation_command)
-    add_relation_command = "mv newfile #{model_file_name}"
-    @scriptManager.write_to_file(add_relation_command)
-  end
-
-  def add_query_support(model_name)
-    model_capitalized = model_name.slice(0,1).capitalize + model_name.slice(1..-1)
-    query_support_line_content =     "@#{model_name.pluralize} = #{model_capitalized}.where(params[:where]).offset(params[:offset]).limit(params[:limit]).order(params[:order])"
-    controller_file_name = "app/controllers/#{model_name.pluralize}_controller.rb"
-    add_query_command = "awk 'NR==7{print \"#{query_support_line_content}\"}1' #{controller_file_name} > newfile"
-    @scriptManager.write_to_file(add_query_command)
-    add_query_command = "rm #{controller_file_name}"
-    @scriptManager.write_to_file(add_query_command)
-    add_query_command = "mv newfile #{controller_file_name}"
-    @scriptManager.write_to_file(add_query_command)
-    add_query_command = "sed -i.bak -e  '6d' #{controller_file_name}"
-    @scriptManager.write_to_file(add_query_command)
-    add_query_command = "rm #{controller_file_name}.bak"
-    @scriptManager.write_to_file(add_query_command)
   end
 
   def migrate_db
