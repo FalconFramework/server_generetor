@@ -46,7 +46,8 @@ model = options[:model] || nil
 case ARGV[0]
 when "generate"
     accepted_formats = [".yml"]
-  if model == nil || File.directory?(model) == false || accepted_formats.include?(File.extname(model)) == false
+
+  if model == nil || File.file?(model) == false || accepted_formats.include?(File.extname(model)) == false
     puts "--------------------------------------------"
     puts ""
     puts ""
@@ -55,7 +56,7 @@ when "generate"
     puts ""
     puts "--------------------------------------------"
     puts opt_parser
-  elsif target == nil
+  elsif target == nil || File.directory?(target) == false
   puts "--------------------------------------------"
   puts ""
   puts ""
@@ -71,7 +72,6 @@ when "generate"
 
     falcon = FalconFactory::Factory
     falcon.process_factory(model,target)
-
   end
 else
   puts opt_parser

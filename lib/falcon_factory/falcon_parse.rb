@@ -8,63 +8,47 @@ class FalconParse
     fileContent = YAML.load_file(model_path)
     @infos = fileContent['infos']
     @models = fileContent['models']
-    @scriptManager = FalconScriptManager.new('falcon.sh')
+    @scriptManager = FalconScriptManager.new
     @relations_types =  /"|has_many|belongs_to|has_one|"/
     @target_path = target_path
   end
 
   def create_api
     api_name = @infos['app_name']
-    rails_version = "5.0.0.beta3"
+    rails_version = "5.0.0.rc1"
 
-    @scriptManager.write_to_file("cd #{@target_path}")
-    @scriptManager.write_to_file("mkdir falcon_generated_app")
-    @scriptManager.write_to_file("cd falcon_generated_app")
+    @scriptManager.run_line("cd #{@target_path}")
+    @scriptManager.run_line("mkdir #{@target_path}/falcon_generated_app")
+    @target_path =  "#{@target_path}/falcon_generated_app"
 
-    check_environment_string ='source ~/.rvm/scripts/rvm
-if [[ "$(rvm -v)" != *"1.27"* ]]
+    check_environment_string ='
+if [[ "$(rails -v)" != *"#{}"* ]]
 then
-  echo "Needs rvm 1.27"
-  echo "Installing rvm 1.27..."
-  \curl -sSL https://get.rvm.io | bash -s stable --rails ' + "\n " +
-  'echo [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" >> ~/.bash_profile
-fi
-
-if [[ "$(rvm use ruby-2.3.0)" == *"is not installed"* ]]
-then
-  echo "Needs ruby 2.3.0"
-  echo "Installing ruby 2.3.0..."
-  rvm install ruby-2.3.0
-  rvm use ruby-2.3.0
-fi
-
-if [[ "$(rails -v)" != *"5.0"* ]]
-then
-  echo "Needs Rails 5.0"
-  echo "Installing Rails 5.0"
-  rvm use ruby-2.3.0@' + "#{api_name}" + ' --ruby-version --create
-  rvm gemset use ' + "#{api_name}" + '
+  echo "Needs Rails 5.0.0.rc1"
+  echo "Installing Rails 5.0.0.rc1"
   gem install rails -v ' + rails_version + '
 fi
 '
-    @scriptManager.write_to_file(check_environment_string)
-    @scriptManager.write_to_file('echo "Creating API..."')
-    @scriptManager.write_to_file("rails _#{rails_version}_ new #{api_name} --api ")
-    @scriptManager.write_to_file("cd #{api_name}/")
+    @scriptManager.run_line(check_environment_string)
+    @scriptManager.run_line('echo "Creating API..."')
+    @scriptManager.run_line("rails _#{rails_version}_ new  #{@target_path}/#{api_name} --api ")
+    @target_path =  "#{@target_path}/#{api_name}"
 
-    @scriptManager.write_to_file('echo "Config JSONAPI"')
+    Dir.chdir("#{@target_path}")
+
+    @scriptManager.run_line('echo "Config JSONAPI"')
     serializer_gem = "'active_model_serializers'"
     serializer_gem_version = "'~> 0.10.0.rc1'"
     gem_to_add = "gem #{serializer_gem}, #{serializer_gem_version}"
-    command_to_add_gem = 'echo "' + gem_to_add + '"' + ">> Gemfile"
-    @scriptManager.write_to_file(command_to_add_gem)
-    @scriptManager.write_to_file("echo ActiveModel::Serializer.config.adapter = :json >> config/initializers/ams_json_adapter.rb")
-    @scriptManager.write_to_file("bundle install")
+    command_to_add_gem = 'echo "' + gem_to_add + '"' + ">> #{@target_path}/Gemfile"
+    @scriptManager.run_line(command_to_add_gem)
+    @scriptManager.run_line("echo ActiveModel::Serializer.config.adapter = :json >> #{@target_path}/config/initializers/ams_json_adapter.rb")
+    @scriptManager.run_line("bundle install")
   end
 
   def create_models
-    @scriptManager.write_to_file('echo "Creating Models..."')
-    @scriptManager.write_to_file("spring stop")
+    @scriptManager.run_line('echo "Creating Models..."')
+    @scriptManager.run_line("spring stop")
 
     @models.each do |model, properties|
       current_model_command = "rails g scaffold #{model} "
@@ -79,7 +63,7 @@ fi
           current_model_command += "#{property_name}:#{type} "
         end
       end
-      @scriptManager.write_to_file(current_model_command)
+      @scriptManager.run_line(current_model_command)
     end
   end
 
@@ -90,15 +74,15 @@ fi
           if type == "has_many"
             pluralized_property_name = property_name.pluralize
             add_relation_line_content = "#{type} :#{pluralized_property_name}"
-            @scriptManager.write_script_to_add_relation_line_in_model(model,add_relation_line_content)
+            @scriptManager.run_script_to_add_relation_line_in_model(@target_path,model,add_relation_line_content)
           elsif type.include?("belongs_to =>")
             class_name_string = (type.split(' => ')[1]).capitalize
             relation_name = type.split('=>')[0]
             add_relation_line_content = "#{relation_name} :friend, :class_name => \\\"#{class_name_string}\\\" "
-            @scriptManager.write_script_to_add_relation_line_in_model(model,add_relation_line_content)
+            @scriptManager.run_script_to_add_relation_line_in_model(@target_path,model,add_relation_line_content)
           elsif type != "belongs_to"
             add_relation_line_content = "#{type} :#{property_name}"
-            @scriptManager.write_script_to_add_relation_line_in_model(model,add_relation_line_content)
+            @scriptManager.run_script_to_add_relation_line_in_model(@target_path,model,add_relation_line_content)
           end
         end
       end
@@ -107,11 +91,11 @@ fi
 
   def create_query_support
     @models.each do |model, properties|
-      @scriptManager.write_script_to_add_query_support(model)
+      @scriptManager.run_script_to_add_query_support(@target_path,model)
     end
   end
 
   def migrate_db
-    @scriptManager.write_to_file('rake db:migrate')
+    @scriptManager.run_line("rake db:migrate")
   end
 end

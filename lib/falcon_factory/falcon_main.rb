@@ -1,6 +1,5 @@
 require_relative 'falcon_parse.rb'
 
-
 class FalconMain
   def create_app_factory_script(model_path, target_path)
     falcon = FalconParse.new(model_path, target_path)
@@ -10,11 +9,4 @@ class FalconMain
     falcon.migrate_db
     falcon.create_query_support
   end
-
-  # def process(model_path, target_path)
-  #   falcon_main = FalconParse.new
-  #   proccess = falcon_main.testedelparse(model_path, target_path)
-  #   proccess
-  # end
-
 end
