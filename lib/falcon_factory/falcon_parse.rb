@@ -10,13 +10,14 @@ class FalconParse
     @models = fileContent['models']
     @scriptManager = FalconScriptManager.new('falcon.sh')
     @relations_types =  /"|has_many|belongs_to|has_one|"/
+    @target_path = target_path
   end
 
   def create_api
     api_name = @infos['app_name']
     rails_version = "5.0.0.beta3"
 
-    @scriptManager.write_to_file("cd #{target_path}")
+    @scriptManager.write_to_file("cd #{@target_path}")
     @scriptManager.write_to_file("mkdir falcon_generated_app")
     @scriptManager.write_to_file("cd falcon_generated_app")
 

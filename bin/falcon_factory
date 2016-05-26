@@ -45,12 +45,12 @@ model = options[:model] || nil
 
 case ARGV[0]
 when "generate"
-
-  if model == nil
+    accepted_formats = [".yml"]
+  if model == nil || File.directory?(model) == false || accepted_formats.include?(File.extname(model)) == false
     puts "--------------------------------------------"
     puts ""
     puts ""
-    puts "Attention: Model path not specified, please put -m option and pass the folder like 'falcon_factory generate -m /usr/mymodel.yml'"
+    puts "Attention: Model .yml file not specified, please put -m option and pass the folder like 'falcon_factory generate -m /usr/mymodel.yml'"
     puts ""
     puts ""
     puts "--------------------------------------------"
@@ -69,9 +69,9 @@ when "generate"
     puts "target #{target}"
     puts "model #{model}"
 
-    falcon = FalconFactory::FalconMain.new
-    falcon.create_app_factory_script(model,target)
-    
+    falcon = FalconFactory::Factory
+    falcon.process_factory(model,target)
+
   end
 else
   puts opt_parser
