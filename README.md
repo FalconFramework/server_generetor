@@ -1,9 +1,32 @@
-# How to use it?
+# FalconFactory
+
+Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/falcon_factory`. To experiment with that code, run `bin/console` for an interactive prompt.
+
+TODO: Delete this and the text above, and describe your gem
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+`REQUIRES ruby-2.3.0`
+
+```ruby
+gem 'falcon_factory'
+```
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install falcon_factory
+
+## Usage
 
 This is the Falcon server generator.
 
-* 1. run git clone git@gitlab.com:FalconTeam/server_generetor.git
-* 2. Define your falcon_schema.yml. (infos, models, ...)![Screen_Shot_2016-05-05_at_9.02.07_PM](/uploads/f37868c49239e02e0bcb2f50a740cdfe/Screen_Shot_2016-05-05_at_9.02.07_PM.png)
+* 1. Define your falcon_schema.yml. (infos, models, ...)![Screen_Shot_2016-05-05_at_9.02.07_PM](/uploads/f37868c49239e02e0bcb2f50a740cdfe/Screen_Shot_2016-05-05_at_9.02.07_PM.png)
 
 `user: ` is a model name.
 
@@ -11,12 +34,16 @@ This is the Falcon server generator.
 
 `friend:` is a relation with friend model identified by the type `has_many`.
 
-`friend: belongs_to => user` is a relation with name `friend` and a class defined `user` 
+`friend: belongs_to => user` is a relation with name `friend` and a class defined `user`
+* 2. run `falcon_factory generate -m /falcon_schema.yml -t /my_generated_app_path`. This will generate a falcon.sh script witch will create you server
+* 3. run cd my_generated_app_path
+* 4. run rails s
+* 5. Enjoy your api
 
-* 3. run `ruby falcon_main.rb`. This will generate a falcon.sh script witch will create you server 
-* 4. run `bash falcon.sh`. This will generate a application based on your schema. If you dont have necessary tools to generate a server, this script will install them, this can take some minutes.
-* 5. run cd ..
-* 6. run cd falcon_generated_app
-* 7. run cd your_app_name
-* 8. run rails s
-* 9. Enjoy your api
+## Development
+
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [falconframework.com/falcon_factory](https://falconframework.com/falcon_factory).
+
+## Contributing
