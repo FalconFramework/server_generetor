@@ -1,11 +1,11 @@
 # require 'spec_helper'
 #
-# describe FalconFactory do
+# describe FalconParse do
 #
-#   describe '#proccess' do
+#   describe '#testedelparse' do
 #     let(:model_input) { '\mymodelpath.yml' }
 #     let(:target_input) { '\mytargetpath' }
-#     let(:output) { subject.process_factory(model_input,target_input) }
+#     let(:output) { subject.testedelparse(model_input,target_input) }
 #
 #     it 'plus' do
 #       expect(output).to eq "#{model_input}+#{target_input}"
