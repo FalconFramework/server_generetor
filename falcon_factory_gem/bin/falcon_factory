@@ -1,0 +1,100 @@
+#!/usr/bin/env ruby
+
+require 'falcon_factory'
+require 'optparse'
+
+options = {}
+
+opt_parser = OptionParser.new do |opt|
+  opt.banner = "Usage: falcon_factory COMMAND [OPTIONS]"
+  opt.separator  ""
+  opt.separator "--------------------------------------------"
+  opt.separator  "Commands"
+  opt.separator  ""
+
+  opt.separator  "           generate: Generate the application through a model"
+  opt.separator  ""
+
+  opt.separator  ""
+  opt.separator "--------------------------------------------"
+  opt.separator  "Options"
+
+  opt.on("-t","--target TARGET","Tell the folder path to store your generated application") do
+  |target|
+    options[:target] = target
+  end
+
+  opt.on("-m","--model MODEL","Tell the folder path of your .yml database model") do
+  |model|
+    options[:model] = model
+  end
+
+  opt.on("-h","--help","help") do
+  end
+
+end
+
+opt_parser.parse!
+
+
+target = options[:target] || nil
+model = options[:model] || nil
+
+
+case ARGV[0]
+when "generate"
+    accepted_formats = [".yml"]
+
+  if model == nil
+    puts "--------------------------------------------"
+    puts ""
+    puts ""
+    puts "Attention: Model .yml file not specified, please put -m option and pass the folder like 'falcon_factory generate -m /usr/mymodel.yml'"
+    puts ""
+    puts ""
+    puts "--------------------------------------------"
+    puts opt_parser
+  elsif File.file?(model) == false
+    puts "--------------------------------------------"
+    puts ""
+    puts ""
+    puts "Attention: Model .yml file not found in #{model}, please specify the correct file path like this: /usr/mymodel.yml'"
+    puts ""
+    puts ""
+    puts "--------------------------------------------"
+  elsif accepted_formats.include?(File.extname(model)) == false
+    puts "--------------------------------------------"
+    puts ""
+    puts ""
+    puts "Attention: #{model} is not a .yml file, please specify the correct file path like this: /usr/mymodel.yml'"
+    puts ""
+    puts ""
+    puts "--------------------------------------------"
+  elsif target == nil
+  puts "--------------------------------------------"
+  puts ""
+  puts ""
+    puts "Target not specified, please put -m option and pass the folder like 'falcon_factory generate -m /usr/mymodel.yml -t /myappfolder'"
+    puts ""
+    puts ""
+    puts "--------------------------------------------"
+    puts ""
+    puts opt_parser
+  elsif File.directory?(target) == false
+    puts "--------------------------------------------"
+    puts ""
+    puts ""
+      puts "#{target} Path not found, please specify the correct and existing folder like '/myappfolder'"
+      puts ""
+      puts ""
+      puts "--------------------------------------------"
+      puts ""
+  else
+    puts "model selected: #{model}"
+    falcon = FalconFactory::Factory
+    falcon.process_factory(model,target)
+    puts "app generated in target: #{target}"
+  end
+else
+  puts opt_parser
+end
