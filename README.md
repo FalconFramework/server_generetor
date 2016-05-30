@@ -4,7 +4,7 @@ Welcome to your new gem!
 
 ## Installation
 
-Download falcon gem:
+Download falcon gem: [falcon_factory](https://gitlab.com/FalconTeam/server_generetor/raw/f23cd058d6643c0f43af29297c7f759e1ac2450e/falcon_factory-0.0.1.gem).
 
 Add this line to your application's Gemfile:
 
