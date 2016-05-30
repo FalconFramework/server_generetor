@@ -4,6 +4,8 @@ Welcome to your new gem!
 
 ## Installation
 
+Download falcon gem:
+
 Add this line to your application's Gemfile:
 
 `REQUIRES ruby-2.3.0`
