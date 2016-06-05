@@ -11,3 +11,6 @@ rspec:
   script:
     - rspec
 
+rake:
+ script:
+  - rake build
