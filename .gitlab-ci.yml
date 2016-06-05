@@ -5,7 +5,7 @@ before_script:
   - ruby -v
   - which ruby
   - gem install bundler --no-ri --no-rdoc
-  - bundle install --jobs $(nproc)  "${FLAGS[@]}"
+  - bundle install --gemfile falcon_factory_gem/Gemfile --jobs $(nproc)  "${FLAGS[@]}"
 
 rspec:
   script:
