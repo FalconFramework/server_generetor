@@ -1,10 +1,10 @@
 # FalconFactory
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/falcon_factory`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Welcome to your new gem!
 
 ## Installation
+
+Download falcon gem: [falcon_factory](https://gitlab.com/FalconTeam/server_generetor/raw/f23cd058d6643c0f43af29297c7f759e1ac2450e/falcon_factory-0.0.1.gem).
 
 Add this line to your application's Gemfile:
 
