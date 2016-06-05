@@ -8,9 +8,12 @@ before_script:
   - bundle install --gemfile falcon_factory_gem/Gemfile --jobs $(nproc)  "${FLAGS[@]}"
 
 rspec:
+  stage: test
   script:
     - rspec
 
 rake:
+ stage: deploy
  script:
+  - cd falcon_factory_gem
   - rake build
