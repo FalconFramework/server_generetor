@@ -16,6 +16,19 @@ Gem::Specification.new do |spec|
   spec.license       = "MIT"
   spec.required_ruby_version     = '>= 2.3.0'
 
+  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.executables   = ["falcon_factory"]
+  spec.require_paths = ["lib"]
+
+  spec.add_dependency "activesupport-inflector"
+  spec.add_dependency "activesupport", "~> 5.0.0.rc1"
+  spec.add_dependency "bundler", "~> 1.11"
+
+  spec.add_development_dependency 'rspec'
+  spec.add_development_dependency "rake", "~> 10.0"
+
+  spec.post_install_message = "Thanks for install falcon_factory!"
+
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
   # delete this section to allow pushing this gem to any host.
   if spec.respond_to?(:metadata)
@@ -24,13 +37,4 @@ Gem::Specification.new do |spec|
     raise "RubyGems 2.3.0 or newer is required to protect against public gem pushes."
   end
 
-  spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
-  spec.executables   = ["falcon_factory"]
-  spec.require_paths = ["lib"]
-
-  spec.add_development_dependency "bundler", "~> 1.11"
-  spec.add_development_dependency 'rspec'
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "activesupport-inflector"
-  spec.add_development_dependency "active_model_serializers", "~> 0.10.0.rc1"
 end
