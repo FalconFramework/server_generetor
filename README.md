@@ -4,11 +4,14 @@ Welcome to your new gem!
 
 ## Installation
 
+`REQUIRES RUBY > 2.3.0 ` -> [Ruby install tutorial](https://gorails.com/setup/ubuntu/16.04)
+
+
 Download falcon gem: [falcon_factory](https://www.dropbox.com/s/s14c8k320egko04/falcon_factory-0.0.1.gem?dl=0).
 
 install it yourself as:
 
-    $ gem install falcon_factory
+    $ gem install falcon_factory-0.0.1.gem
 
 ## Usage
 
