@@ -2,6 +2,7 @@
 
 require 'falcon_factory'
 require 'optparse'
+require "falcon_factory/version"
 
 options = {}
 
@@ -30,6 +31,10 @@ opt_parser = OptionParser.new do |opt|
   end
 
   opt.on("-h","--help","help") do
+  end
+
+  opt.on("-v","--version","version") do
+    puts "version " + FalconFactory::VERSION
   end
 
 end
@@ -95,6 +100,8 @@ when "generate"
     falcon.process_factory(model,target)
     puts "app generated in target: #{target}"
   end
+when "-v"
+when "--version"
 else
   puts opt_parser
 end
