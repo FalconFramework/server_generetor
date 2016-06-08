@@ -22,7 +22,7 @@ class FalconParse
     @target_path =  "#{@target_path}/falcon_generated_app"
 
     check_environment_string ='
-if [[ "$(rails -v)" != *"#{}"* ]]
+if [[ "$(rails -v)" != *"5.0.0.rc1"* ]]
 then
   echo "Needs Rails 5.0.0.rc1"
   echo "Installing Rails 5.0.0.rc1"

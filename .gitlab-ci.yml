@@ -1,0 +1,32 @@
+image: ruby:2.3
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq sqlite3 libsqlite3-dev nodejs
+  - ruby -v
+  - which ruby
+  - gem install bundler --no-ri --no-rdoc
+  - bundle install --gemfile falcon_factory_gem/Gemfile --jobs $(nproc)  "${FLAGS[@]}"
+
+Unit Tests:
+  stage: test
+  script:
+    - rspec
+
+Release to dropbox:
+ stage: deploy
+ script:
+  - cd falcon_factory_gem
+  - rake build
+  - >- 
+      curl -X POST https://api.dropboxapi.com/2/files/delete \
+    --header "Authorization: Bearer 7MrPrA4nZMEAAAAAAAAT7afPIEKGP8wK_5PbO5zMKhJuhGVPC65q9VR5wnCpqs2h" \
+    --header "Content-Type: application/json" \
+    --data "{\"path\": \"/Releases/falcon_factory_gem/falcon_factory-0.0.1.gem\"}"
+  
+  - >- 
+      curl
+      -X POST https://content.dropboxapi.com/2/files/upload 
+      --header "Authorization: Bearer 7MrPrA4nZMEAAAAAAAAT6G6uJ97ljn8HUw5KgJLykFg_dKnRycGmkNRYMYYJj0bM"
+      --header "Dropbox-API-Arg: {\"path\": \"/Releases/falcon_factory_gem/falcon_factory-0.0.1.gem\",\"mode\": \"add\",\"autorename\": true,\"mute\": false}"
+      --header "Content-Type: application/octet-stream"
+      --data-binary pkg/falcon_factory-0.0.1.gem

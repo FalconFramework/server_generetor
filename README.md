@@ -4,39 +4,51 @@ Welcome to your new gem!
 
 ## Installation
 
-Add this line to your application's Gemfile:
+`REQUIRES RUBY > 2.3.0 ` -> [Ruby install tutorial](https://gorails.com/setup/ubuntu/16.04)
 
-`REQUIRES ruby-2.3.0`
 
-```ruby
-gem 'falcon_factory'
-```
+Download falcon gem: [falcon_factory](https://www.dropbox.com/s/s14c8k320egko04/falcon_factory-0.0.1.gem?dl=0).
 
-And then execute:
+install it yourself as:
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install falcon_factory
+    $ gem install falcon_factory-0.0.1.gem
 
 ## Usage
 
 This is the Falcon server generator.
 
-* 1. Define your falcon_schema.yml. (infos, models, ...)![Screen_Shot_2016-05-05_at_9.02.07_PM](/uploads/f37868c49239e02e0bcb2f50a740cdfe/Screen_Shot_2016-05-05_at_9.02.07_PM.png)
+###  1. For generate your server you just need to define your falcon_schema.yml. (infos, models, ...)
 
-`user: ` is a model name.
+# Pay atention with the identation, yml is super thorough with this.
 
-`name:` is a property and `string` is the type.
+``` yml 
+infos:
+  app_name: 'Great-App' 
 
-`friend:` is a relation with friend model identified by the type `has_many`.
+models:
+  user: #<--------- `user` is the model name -------->
+    name: string
+    email: string
+    phone_number: string
+    birth_date: date  #<--------- `birth_date` is the property name --------> `date` is the property type. 
+    friend: has_many  #<--------- `friend` is the name of another model --------> `has_many` is the name of the relation point
+  friend:
+    user: belongs_to #<--------- `user` is the name of another model --------> `belongs_to` is the name of the relation point
+    friend: belongs_to => user  #<--------- `friend` is the property name --------> `belongs_to` is the name of the relation point --------> `user` is the relation destination model
+  preference:
+    user: belongs_to
+    bidget: float
+```
+This model represent this DB 
 
-`friend: belongs_to => user` is a relation with name `friend` and a class defined `user`
-* 2. run `falcon_factory generate -m /falcon_schema.yml -t /my_generated_app_path`. This will generate a falcon.sh script witch will create you server
-* 3. run cd my_generated_app_path
-* 4. run rails s
-* 5. Enjoy your api
+![DB](https://gitlab.com/FalconTeam/artefatos/raw/master/Desenho_de_Software/server_factory_sample.png)
+
+
+###  2. run `falcon_factory generate -m your_falcon_schema_file.yml -t existent_folder_to_save_de_server`. This will generate a falcon.sh script witch will create you server
+###  3. run `cd my_generated_app_path/falcon_generated_app/my_app_name`
+###  4. run `rails s`
+
+###  5. Enjoy your api
 
 ## Development
 
