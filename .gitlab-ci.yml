@@ -18,6 +18,12 @@ Release to dropbox:
   - cd falcon_factory_gem
   - rake build
   - >- 
+      curl -X POST https://api.dropboxapi.com/2/files/delete \
+    --header "Authorization: Bearer 7MrPrA4nZMEAAAAAAAAT7afPIEKGP8wK_5PbO5zMKhJuhGVPC65q9VR5wnCpqs2h" \
+    --header "Content-Type: application/json" \
+    --data "{\"path\": \"/Releases/falcon_factory_gem/falcon_factory-0.0.1.gem\"}"
+  
+  - >- 
       curl
       -X POST https://content.dropboxapi.com/2/files/upload 
       --header "Authorization: Bearer 7MrPrA4nZMEAAAAAAAAT6G6uJ97ljn8HUw5KgJLykFg_dKnRycGmkNRYMYYJj0bM"
