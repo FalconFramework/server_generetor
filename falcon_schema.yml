@@ -1,13 +1,11 @@
 infos:
-  app_name: 'ido'
+  app_name: 'Great-App'
 
 models:
   user:
     name: string
     email: string
-    phone_number: string
-    wedding_date: date
-    phone_number: string
+    age: integer
     friend: has_many
   friend:
     user: belongs_to
