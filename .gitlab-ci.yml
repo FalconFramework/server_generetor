@@ -20,9 +20,9 @@ Release to dropbox:
  
   - >- 
     curl 
-    -X POST https://api.dropboxapi.com/2/files/delete \
-    --header "Authorization: Bearer 7MrPrA4nZMEAAAAAAAAT7afPIEKGP8wK_5PbO5zMKhJuhGVPC65q9VR5wnCpqs2h" \
-    --header "Content-Type: application/json" \
+    -X POST https://api.dropboxapi.com/2/files/delete
+    --header "Authorization: Bearer 7MrPrA4nZMEAAAAAAAAT7afPIEKGP8wK_5PbO5zMKhJuhGVPC65q9VR5wnCpqs2h"
+    --header "Content-Type: application/json"
     --data "{\"path\": \"/Releases/falcon_factory_gem/falcon_factory-0.0.1.gem\"}"
   
   - >- 
